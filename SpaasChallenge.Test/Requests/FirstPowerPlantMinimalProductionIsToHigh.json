@@ -1,0 +1,33 @@
+{
+  "load": 50,
+  "fuels":
+  {
+    "gas(euro/MWh)": 13.4,
+    "kerosine(euro/MWh)": 50.8,
+    "co2(euro/ton)": 20,
+    "wind(%)": 60
+  },
+  "powerplants": [
+    {
+      "name": "gasfiredbig1",
+      "type": "gasfired",
+      "efficiency": 0.55,
+      "pmin": 60,
+      "pmax": 80
+    },
+    {
+      "name": "gasfiredsomewhatsmaller1",
+      "type": "gasfired",
+      "efficiency": 0.53,
+      "pmin": 10,
+      "pmax": 40
+    },
+    {
+      "name": "gasfiredsomewhatsmaller2",
+      "type": "gasfired",
+      "efficiency": 0.37,
+      "pmin": 10,
+      "pmax": 40
+    }
+  ]
+}

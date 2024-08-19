@@ -1,0 +1,26 @@
+[
+  {
+    "name": "firstWindpark",
+    "p": 90
+  },
+  {
+    "name": "seccondWindpark",
+    "p": 21.6
+  },
+  {
+    "name": "firstGasfired1",
+    "p": 460
+  },
+  {
+    "name": "secondGasfired2",
+    "p": 460
+  },
+  {
+    "name": "firstTurbojet",
+    "p": 16
+  },
+  {
+    "name": "secondTurbojet",
+    "p": 2.4
+  }
+]

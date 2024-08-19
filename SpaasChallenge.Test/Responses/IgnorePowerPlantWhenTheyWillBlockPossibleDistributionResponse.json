@@ -1,0 +1,18 @@
+[
+  {
+    "name": "gasfiredsmall1",
+    "p": 100
+  },
+  {
+    "name": "gasfiredbig1",
+    "p": 50
+  },
+  {
+    "name": "windpark",
+    "p": 0
+  },
+  {
+    "name": "gasfiredbig2",
+    "p": 0
+  }
+]

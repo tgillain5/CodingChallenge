@@ -1,0 +1,19 @@
+{
+  "load": 999,
+  "fuels":
+  {
+    "gas(euro/MWh)": 13.4,
+    "kerosine(euro/MWh)": 50.8,
+    "co2(euro/ton)": 20,
+    "wind(%)": 100
+  },
+  "powerplants": [
+    {
+      "name": "TooBigWindpark2",
+      "type": "windturbine",
+      "efficiency": 1,
+      "pmin": 0,
+      "pmax": 1000
+    }
+  ]
+}

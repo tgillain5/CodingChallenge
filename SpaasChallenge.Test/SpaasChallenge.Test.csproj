@@ -70,9 +70,6 @@
       <None Update="Requests\IgnorePowerPlantWhenTheyWillBlockPossibleDistribution.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
-      <None Update="Requests\stuff2.json">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </None>
       <None Update="Responses\IgnorePowerPlantWhenTheyWillBlockPossibleDistributionResponse.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>

@@ -15,7 +15,7 @@ public class ElectricalNetwork
         _load = load;
         ValidateDistributionPossibility();
 
-        TryGetDistribution();
+        SetDistribution();
         AppendUnusedPowerPlant();
     }
 
@@ -43,7 +43,7 @@ public class ElectricalNetwork
        
     }
 
-    private void TryGetDistribution()
+    private void SetDistribution()
     {
         var tempLoad = _load;
         distributions = new List<Distribution>();

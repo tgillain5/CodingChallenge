@@ -1,4 +1,5 @@
-﻿using SPaaSChallenge.Services;
+﻿using SPaaSChallenge.Controllers;
+using SPaaSChallenge.Services;
 
 namespace SPaaSChallenge;
 
@@ -32,7 +33,7 @@ public class Startup
         {
             app.UseDeveloperExceptionPage();
         }
-
+        app.UseMiddleware<ExceptionMiddleware>();
         app.UseSwagger();
         app.UseSwaggerUI();
         app.UseRouting();

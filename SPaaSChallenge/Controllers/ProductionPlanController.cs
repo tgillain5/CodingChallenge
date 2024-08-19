@@ -19,24 +19,14 @@ public class ProductionPlanController
     }
 
     [HttpPost("productionplan")]
-    public async Task<ActionResult<(string name, double production)[]>> ProductionPlan(ProductionPlantRequest productionPlantRequest)
+    public  ActionResult<(string name, double production)[]> ProductionPlan(ProductionPlantRequest productionPlantRequest)
     {
-        try
-        {
-            var distributions = _productionPlantService.ComputeLoadDistribution(
-                load: productionPlantRequest.load,
-                fuelsDto: productionPlantRequest.FuelsDto,
-                powerPlantDtos: productionPlantRequest.powerplants);
-            return new OkObjectResult(distributions.Select(x=>x.Map()).ToArray());
-        }
-        catch (DistributionImpossibleException e)
-        {
-            return new BadRequestObjectResult(e.Message);
-        }
-        catch (InvalidPowerPlantException e)
-        {
-            return new BadRequestObjectResult(e.Message);
-        }
-        
+
+        var distributions = _productionPlantService.ComputeLoadDistribution(
+            load: productionPlantRequest.load,
+            fuelsDto: productionPlantRequest.FuelsDto,
+            powerPlantDtos: productionPlantRequest.powerplants);
+        return new OkObjectResult(distributions.Select(x=>x.Map()).ToArray());
+
     }
 }

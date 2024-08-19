@@ -83,7 +83,7 @@ public class Tests
 
         //Assert
         Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
-        Assert.Contains(await httpResponse.Content.ReadAsStringAsync(), "invalid powerPlant type");
+        Assert.Contains("invalid powerPlant type" , await httpResponse.Content.ReadAsStringAsync());
     }
     
     [Fact]
@@ -94,7 +94,7 @@ public class Tests
 
         //Assert
         Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
-        Assert.Contains(await httpResponse.Content.ReadAsStringAsync(), "Impossible to provide the expected load");
+        Assert.Contains("Impossible to provide the expected load" , await httpResponse.Content.ReadAsStringAsync());
     }
     
     [Fact]
@@ -105,7 +105,7 @@ public class Tests
 
         //Assert
         Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
-        Assert.Contains(await httpResponse.Content.ReadAsStringAsync(), "Impossible to provide the expected load");
+        Assert.Contains("Impossible to provide the expected load" , await httpResponse.Content.ReadAsStringAsync());
     }
     
     [Fact]
@@ -116,7 +116,7 @@ public class Tests
 
         //Assert
         Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
-        Assert.Contains(await httpResponse.Content.ReadAsStringAsync(), "Impossible to provide the expected load");
+        Assert.Contains("Impossible to provide the expected load" , await httpResponse.Content.ReadAsStringAsync());
     }
     
 

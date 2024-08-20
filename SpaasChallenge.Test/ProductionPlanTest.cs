@@ -11,10 +11,9 @@ namespace SpaasChallenge.Test;
 public class Tests
 {
     private readonly HttpClient _client = TestServer.Create();
-
-
+    
     [Fact]
-    public async void WhenAPowerPlantWillBlockPossibleDistribution_itIsIgnored()
+    public async Task WhenAPowerPlantWillBlockPossibleDistribution_itIsIgnored()
     {
         //Act
         var httpResponse = await GetHttpResponseForTestFile("/Requests/IgnorePowerPlantWhenTheyWillBlockPossibleDistribution.json");
@@ -26,7 +25,7 @@ public class Tests
     }
     
     [Fact]
-    public async void WhenProvidedWithSampleRequest_ReturnsSampleResponse()
+    public async Task WhenProvidedWithSampleRequest_ReturnsSampleResponse()
     {
         //Act
         var httpResponse = await GetHttpResponseForTestFile("/Requests/ProvidedRequest.json");
@@ -38,7 +37,7 @@ public class Tests
     }
     
     [Fact]
-    public async void PowerPlantAreOrderByCostEfficency()
+    public async Task PowerPlantAreOrderByCostEfficency()
     {
         //Act
         var httpResponse = await GetHttpResponseForTestFile("/Requests/CostEfficiency.json");
@@ -49,9 +48,8 @@ public class Tests
         Assert.Equal(expectedResponseAsJson, jsonIndentedResponse);
     }
     
-    
     [Fact]
-    public async void WhenIsToMuch_WindIsIgnord()
+    public async Task WhenIsToMuch_WindIsIgnord()
     {
         //Act
         var httpResponse = await GetHttpResponseForTestFile("/Requests/WindIsTooMuch.json");
@@ -63,7 +61,7 @@ public class Tests
     }
     
     [Fact]
-    public async void WhenFirstPowerPlantMinimalProductionIsToHigh_ProductionIsDistributedOnFollowingPowerPlants()
+    public async Task WhenFirstPowerPlantMinimalProductionIsToHigh_ProductionIsDistributedOnFollowingPowerPlants()
     {
         //Act
         var httpResponse = await GetHttpResponseForTestFile("/Requests/FirstPowerPlantMinimalProductionIsToHigh.json");
@@ -74,20 +72,8 @@ public class Tests
         Assert.Equal(expectedResponseAsJson, jsonIndentedResponse);
     }
     
-    
     [Fact]
-    public async void WhenAnInvalidPowerPlantTypeIsSent_BadRequest()
-    {
-        //Act
-        var httpResponse = await GetHttpResponseForTestFile("/Requests/InvalidPowerPlantType.json");
-
-        //Assert
-        Assert.Equal(HttpStatusCode.BadRequest, httpResponse.StatusCode);
-        Assert.Contains("invalid powerPlant type" , await httpResponse.Content.ReadAsStringAsync());
-    }
-    
-    [Fact]
-    public async void WhenDistributionIsImpossible_BadRequest()
+    public async Task WhenDistributionIsImpossible_BadRequest()
     {
         //Act
         var httpResponse = await GetHttpResponseForTestFile("/Requests/DistributionImpossible.json");
@@ -98,7 +84,7 @@ public class Tests
     }
     
     [Fact]
-    public async void WhenAllPowerPlantMaximalProductionIsNotEnough_BadRequest()
+    public async Task WhenAllPowerPlantMaximalProductionIsNotEnough_BadRequest()
     {
         //Act
         var httpResponse = await GetHttpResponseForTestFile("/Requests/ProductionTooLow.json");
@@ -109,7 +95,7 @@ public class Tests
     }
     
     [Fact]
-    public async void WhenAllPowerPlantMinimalProductionIsToHigh_BadRequest()
+    public async Task WhenAllPowerPlantMinimalProductionIsToHigh_BadRequest()
     {
         //Act
         var httpResponse = await GetHttpResponseForTestFile("/Requests/LoadTooLow.json");

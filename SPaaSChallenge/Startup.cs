@@ -1,6 +1,6 @@
 ﻿using SPaaSChallenge.Controllers;
 using SPaaSChallenge.Services;
-
+using System.Text.Json.Serialization;
 namespace SPaaSChallenge;
 
 public class Startup
@@ -13,7 +13,10 @@ public class Startup
 
         builder.Build();
 
-        services.AddControllers();
+        services
+            .AddControllers()
+            .AddJsonOptions(options =>
+            options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
         services.AddEndpointsApiExplorer();
         services.AddSwaggerGen();
         services.AddLogging(logging => logging.AddConsole());

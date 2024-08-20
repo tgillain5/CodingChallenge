@@ -9,23 +9,17 @@ namespace SPaaSChallenge.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class ProductionPlanController
+public class ProductionPlanController(IProductionPlantService productionPlantService)
 {
-    private readonly IProductionPlantService _productionPlantService;
-
-    public ProductionPlanController(IProductionPlantService productionPlantService)
-    {
-        _productionPlantService = productionPlantService;
-    }
-
+    
     [HttpPost("productionplan")]
     public  ActionResult<(string name, double production)[]> ProductionPlan(ProductionPlantRequest productionPlantRequest)
     {
 
-        var distributions = _productionPlantService.ComputeLoadDistribution(
-            load: productionPlantRequest.load,
-            fuelsDto: productionPlantRequest.FuelsDto,
-            powerPlantDtos: productionPlantRequest.powerplants);
+        var distributions = productionPlantService.ComputeLoadDistribution(
+            load: productionPlantRequest.Load,
+            fuelDto: productionPlantRequest.FuelDto,
+            powerPlantDtos: productionPlantRequest.PowerPlants);
         return new OkObjectResult(distributions.Select(x=>x.Map()).ToArray());
 
     }

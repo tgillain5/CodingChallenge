@@ -22,7 +22,6 @@ public class Startup
         services.AddLogging(logging => logging.AddConsole());
 
         AddDependencies(services);
-        services.BuildServiceProvider();
     }
 
     private void AddDependencies(IServiceCollection services)

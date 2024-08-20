@@ -5,12 +5,11 @@ namespace SPaaSChallenge.Services;
 
 public class ProductionPlantService : IProductionPlantService
 {
-    public List<Distribution> ComputeLoadDistribution(double load, FuelsDto fuelsDto, PowerplantDto[] powerPlantDtos)
+    public List<Distribution> ComputeLoadDistribution(double load, FuelDto fuelDto, PowerplantDto[] powerPlantDtos)
     {
 
-        var electricalNetwork = new ElectricalNetwork(load, powerPlantDtos.Select(x => PowerPlantFactory.Create(x, fuelsDto)));
-        
-        return electricalNetwork.distributions;
+        var electricalNetwork = new ElectricalNetwork(load, powerPlantDtos.Select(x => PowerPlantFactory.Create(x, fuelDto)));
+        return electricalNetwork.Distributions;
     }
 
 

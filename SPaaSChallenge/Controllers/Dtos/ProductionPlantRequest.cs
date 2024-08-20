@@ -4,11 +4,13 @@ namespace SPaaSChallenge.Controllers.Dtos;
 
 public class ProductionPlantRequest
 {
-    public int load { get; set; }
-
+    
+    [JsonPropertyName("load")]
+    public int Load { get; set; }
     
     [JsonPropertyName("fuels")] 
-    public FuelsDto FuelsDto { get; set; }
+    public FuelDto FuelDto { get; set; }
 
-    public PowerplantDto[] powerplants { get; set; }
+    [JsonPropertyName("powerplants")] 
+    public PowerplantDto[] PowerPlants { get; set; }
 }

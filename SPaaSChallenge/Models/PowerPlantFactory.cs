@@ -6,29 +6,28 @@ namespace SPaaSChallenge.Models;
 
 public static class PowerPlantFactory
 {
-    public static IPowerPlant Create(PowerplantDto powerPlant, FuelsDto fuelsDto)
+    public static IPowerPlant Create(PowerplantDto powerPlant, FuelDto fuelDto)
     {
         return powerPlant.Type switch
         {
-            PowerPlantType.Gasfired => new GasfiredPowerPlant(
+            PowerPlantType.GasFired => new GasFiredPowerPlant(
                 name: powerPlant.Name,
                 efficiency: powerPlant.Efficiency,
                 minimumProduction: powerPlant.MinimumProduction,
                 maximumProduction: powerPlant.MaximumProduction,
-                gasInEuroMWh: fuelsDto.GaseuroMWh),
+                gasInEuroMWh: fuelDto.GasPriceInEuroPerMwh),
 
             PowerPlantType.Turbojet => new TurboJetPowerPlant(
                 name: powerPlant.Name,
                 efficiency: powerPlant.Efficiency,
                 minimumProduction: powerPlant.MinimumProduction,
                 maximumProduction: powerPlant.MaximumProduction,
-                kerosineInEuroMWh: fuelsDto.KerosineeuroMWh),
+                kerosineInEuroMWh: fuelDto.KerosinePriceInEuroPerMwh),
 
-            PowerPlantType.Windturbine => new WindTurbinePowerPlant(
+            PowerPlantType.WindTurbine => new WindTurbinePowerPlant(
                 name: powerPlant.Name,
-                efficiency: powerPlant.Efficiency,
                 production: powerPlant.MaximumProduction,
-                windPercentage: fuelsDto.Wind),
+                windPercentage: fuelDto.Wind),
 
             _ => throw new InvalidPowerPlantException("invalid powerPlant type")
         };

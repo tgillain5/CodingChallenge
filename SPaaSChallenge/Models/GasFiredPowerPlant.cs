@@ -1,15 +1,15 @@
 ﻿namespace SPaaSChallenge.Models;
 
-public class TurboJetPowerPlant(
+public class GasFiredPowerPlant(
     string name,
     double efficiency,
     double minimumProduction,
     double maximumProduction,
-    double kerosineInEuroMWh)
+    double gasInEuroMWh)
     : IPowerPlant
 {
     public string Name { get; } = name;
     public double MinimumProduction { get; } = minimumProduction;
     public double MaximumProduction { get; } = maximumProduction;
-    public double Cost => kerosineInEuroMWh / efficiency;
+    public double Cost => gasInEuroMWh / efficiency;
 }

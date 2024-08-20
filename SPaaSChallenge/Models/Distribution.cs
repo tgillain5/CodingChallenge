@@ -1,8 +1,8 @@
 ﻿namespace SPaaSChallenge.Models;
 
-public class Distribution
+public class Distribution(string powerPlantName, double production)
 {
-    public string PowerPlantName { get; set; }
-    
-    public double Production { get; set; }
+    public string PowerPlantName { get; } = powerPlantName;
+
+    public double Production { get; } = production;
 }

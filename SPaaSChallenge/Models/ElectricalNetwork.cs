@@ -6,7 +6,7 @@ public class ElectricalNetwork
 {
     private readonly double _load;
     private readonly IEnumerable<IPowerPlant> _availablePowerPlants;
-    public List<Distribution> distributions = [];
+    public List<Distribution> Distributions = [];
 
 
     public ElectricalNetwork(double load, IEnumerable<IPowerPlant> powerPlants)
@@ -21,11 +21,11 @@ public class ElectricalNetwork
 
     private void AppendUnusedPowerPlant()
     {
-        distributions
+        Distributions
             .AddRange(_availablePowerPlants
                 .OrderBy(x => x.Cost)
-                .Where(item => distributions.All(x => x.PowerPlantName != item.Name))
-            .Select(item=> new Distribution { PowerPlantName = item.Name, Production = 0 }));
+                .Where(item => Distributions.All(x => x.PowerPlantName != item.Name))
+                .Select(item => new Distribution(powerPlantName: item.Name, production : 0)));
     }
 
 
@@ -46,7 +46,7 @@ public class ElectricalNetwork
     private void SetDistribution()
     {
         var tempLoad = _load;
-        distributions = new List<Distribution>();
+        Distributions = [];
         var powerPlants = _availablePowerPlants.OrderBy(x => x.Cost).ToList();
 
         while (tempLoad > 0)
@@ -65,11 +65,10 @@ public class ElectricalNetwork
                 continue;
             }
             
-            
             //we'll need an extra powerPlant to meet the load requirement
             if (tempLoad > currentPowerPlant.MaximumProduction)
             {
-                //if there is not possibility to meet the load requirement with this powerPlant we try with the next one
+                //if there is no possibility to meet the load requirement with this powerPlant we try with the next one
                 var nextEligiblePowerPlant = powerPlants.FirstOrDefault(x => (x.MinimumProduction + currentPowerPlant.MinimumProduction) <= tempLoad);
                 if (nextEligiblePowerPlant == null)
                 {
@@ -83,23 +82,20 @@ public class ElectricalNetwork
                     removableAmount = currentPowerPlant.MaximumProduction;
                 }
                 
-                distributions.Add(new Distribution { PowerPlantName = currentPowerPlant.Name, Production = removableAmount });
+                Distributions.Add(new Distribution (powerPlantName : currentPowerPlant.Name, production : removableAmount));
                 tempLoad -= removableAmount;
             }
 
             //this powerPlant is enough to cover the load requirement
             else
             {
-                distributions.Add(new Distribution { PowerPlantName = currentPowerPlant.Name, Production = tempLoad });
+                Distributions.Add(new Distribution (powerPlantName : currentPowerPlant.Name, production : tempLoad ));
                 tempLoad = 0.0;
             }
             
         }
 
     }
-
-
-
-
+    
 }
 

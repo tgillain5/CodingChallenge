@@ -9,6 +9,4 @@ public class DistributionDto
     
     [JsonPropertyName("p")]
     public double Production { get; set; }
-    
-    
 }

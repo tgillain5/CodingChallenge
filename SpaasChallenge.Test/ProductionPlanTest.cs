@@ -5,7 +5,6 @@ using SPaaSChallenge.Controllers.Dtos;
 using Xunit;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
-
 namespace SpaaSChallenge.Test;
 
 public class Tests

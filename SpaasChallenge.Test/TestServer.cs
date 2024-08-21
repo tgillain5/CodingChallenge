@@ -10,7 +10,7 @@ public static class TestServer
         return new WebApplicationFactory<Program>()
             .WithWebHostBuilder(builder =>
             {
-                builder.ConfigureTestServices(services => 
+                builder.ConfigureTestServices(services =>
                 {
                     //overwrite external dependencies here
                 });

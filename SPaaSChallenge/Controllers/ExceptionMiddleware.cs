@@ -4,49 +4,40 @@ using SPaaSChallenge.Services;
 
 namespace SPaaSChallenge.Controllers;
 
-public class ExceptionMiddleware 
+public class ExceptionMiddleware(RequestDelegate next)
 {
-    private readonly RequestDelegate _next;
-    
-        public ExceptionMiddleware(RequestDelegate next)
+    public (HttpStatusCode code, string message) GetResponse(Exception exception)
+    {
+        HttpStatusCode code;
+        switch (exception)
         {
-            _next = next;
+            case DistributionImpossibleException
+                or InvalidPowerPlantException:
+                code = HttpStatusCode.BadRequest;
+                break;
+            default:
+                code = HttpStatusCode.InternalServerError;
+                break;
         }
 
-        public (HttpStatusCode code, string message) GetResponse(Exception exception)
+        return (code, JsonConvert.SerializeObject(exception.Message));
+    }
+
+    public async Task Invoke(HttpContext context)
+    {
+        try
         {
-            HttpStatusCode code;
-            switch (exception)
-            {
-                case DistributionImpossibleException
-                    or InvalidPowerPlantException:
-                    code = HttpStatusCode.BadRequest;
-                    break;
-                default:
-                    code = HttpStatusCode.InternalServerError;
-                    break;
-            }
-            return (code, JsonConvert.SerializeObject(exception.Message));
+            await next(context);
         }
-        
-        public async Task Invoke(HttpContext context)
+        catch (Exception exception)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (Exception exception)
-            {
-                var response = context.Response;
-                response.ContentType = "application/json";
-            
-                // get the response code and message
-                var (status, message) = GetResponse(exception);
-                response.StatusCode = (int) status;
-                await response.WriteAsync(message);
-            }
+            var response = context.Response;
+            response.ContentType = "application/json";
+
+            // get the response code and message
+            var (status, message) = GetResponse(exception);
+            response.StatusCode = (int)status;
+            await response.WriteAsync(message);
         }
+    }
 }
-
-
-

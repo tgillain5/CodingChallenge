@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using SPaaSChallenge.Controllers.Dtos;
 using SPaaSChallenge.Controllers.Mappers;
 using SPaaSChallenge.Services;

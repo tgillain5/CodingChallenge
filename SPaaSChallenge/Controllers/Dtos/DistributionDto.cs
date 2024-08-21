@@ -1,6 +1,4 @@
 ﻿using System.Text.Json.Serialization;
-using Newtonsoft.Json;
-using JsonConverter = Newtonsoft.Json.JsonConverter;
 
 namespace SPaaSChallenge.Controllers.Dtos;
 

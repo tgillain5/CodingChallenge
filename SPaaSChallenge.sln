@@ -2,7 +2,7 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SPaaSChallenge", "SPaaSChallenge\SPaaSChallenge.csproj", "{D625B3D0-4AA5-4AFF-904B-425DE7CCBD27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaasChallenge.Test", "SpaasChallenge.Test\SpaasChallenge.Test.csproj", "{B6105461-2C76-4CD3-AA07-B8F0EE165DEA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaaSChallenge.Test", "SpaaSChallenge.Test\SpaaSChallenge.Test.csproj", "{B6105461-2C76-4CD3-AA07-B8F0EE165DEA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

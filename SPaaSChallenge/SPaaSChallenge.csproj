@@ -7,6 +7,9 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <InternalsVisibleTo Include="SpaaSChallenge.Test" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.*"/>
         <PackageReference Include="Newtonsoft.Json" Version="13.*" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.*"/>

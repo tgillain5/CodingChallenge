@@ -6,7 +6,7 @@ using Xunit;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 
-namespace SpaasChallenge.Test;
+namespace SpaaSChallenge.Test;
 
 public class Tests
 {

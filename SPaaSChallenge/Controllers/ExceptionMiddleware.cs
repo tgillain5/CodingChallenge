@@ -9,14 +9,16 @@ public class ExceptionMiddleware(RequestDelegate next,ILogger<ExceptionMiddlewar
     public (HttpStatusCode code, string message) GetResponse(Exception exception)
     {
         HttpStatusCode code;
-        logger.LogWarning(exception.Message);
+        
         switch (exception)
         {
             case DistributionImpossibleException
                 or InvalidPowerPlantException:
+                logger.LogWarning(exception.Message);
                 code = HttpStatusCode.BadRequest;
                 break;
             default:
+                logger.LogError(exception.Message);
                 code = HttpStatusCode.InternalServerError;
                 break;
         }

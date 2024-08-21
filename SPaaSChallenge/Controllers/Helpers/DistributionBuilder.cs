@@ -3,12 +3,11 @@ using SPaaSChallenge.Services;
 
 namespace SPaaSChallenge.Controllers.Helpers;
 
-public class DistributionBuilder : IDistributionBuilder
+public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistributionBuilder
 {
     private double _load;
     private IEnumerable<IPowerPlant> _availablePowerPlants;
-
-
+    
     public DistributionBuilder SetLoad(double load)
     {
         _load = load;
@@ -20,16 +19,6 @@ public class DistributionBuilder : IDistributionBuilder
         _availablePowerPlants = powerPlants;
         return this;
     }
-
-    private void AppendUnusedPowerPlant(List<Distribution> distributions)
-    {
-        distributions
-            .AddRange(_availablePowerPlants
-                .OrderBy(x => x.Cost)
-                .Where(item => distributions.All(x => x.PowerPlantName != item.Name))
-                .Select(item => new Distribution(powerPlantName: item.Name, production: 0)));
-    }
-
 
     public DistributionBuilder ValidateDistributionPossibilityExists()
     {
@@ -48,6 +37,7 @@ public class DistributionBuilder : IDistributionBuilder
 
     public List<Distribution> Build()
     {
+        logger.LogInformation("starting to build distribution");
         List<Distribution> distributions = [];
         var powerPlants = _availablePowerPlants.OrderBy(x => x.Cost).ToList();
 
@@ -61,31 +51,29 @@ public class DistributionBuilder : IDistributionBuilder
 
             powerPlants.Remove(currentPowerPlant);
 
-            //powerPlant doesn't meet the minimal requirement
             if (currentPowerPlant.MinimumProduction > _load)
             {
+                logger.LogInformation("powerPlant: {Name} doesn't meet the minimal requirement we try with the next one", currentPowerPlant.Name);
                 continue;
             }
-
-            //we'll need an extra powerPlant to meet the load requirement
+            
+            logger.LogInformation("powerPlant: {Name} is not enough to cover the load requirement we'll need an extra powerPlant to meet the load requirement", currentPowerPlant.Name);
             if (_load > currentPowerPlant.MaximumProduction)
             {
-                //if there is no possibility to meet the load requirement with this powerPlant we try with the next one
                 var isThereMatchingPowerPlantToCompleteLoad = TryGetNextMatchingPowerPlant(out var nextEligiblePowerPlant, powerPlants, currentPowerPlant);
+                logger.LogInformation("powerPlant: {Name} will be use to complete the distribution", nextEligiblePowerPlant.Name);
                 if (!isThereMatchingPowerPlantToCompleteLoad)
                 {
                     continue;
                 }
 
-                var removableAmount =
-                    ComputeMaximumRemovableAmountBasedOnNextPowerPlant(nextEligiblePowerPlant, currentPowerPlant);
+                var removableAmount = ComputeMaximumRemovableAmountBasedOnNextPowerPlant(nextEligiblePowerPlant, currentPowerPlant);
                 distributions.Add(new Distribution(powerPlantName: currentPowerPlant.Name, production: removableAmount));
                 _load -= removableAmount;
             }
-
-            //this powerPlant is enough to cover the load requirement
             else
             {
+                logger.LogInformation("powerPlant: {Name} is enough to cover the load requirement and finish the distribution", currentPowerPlant.Name);
                 distributions.Add(new Distribution(powerPlantName: currentPowerPlant.Name, production: _load));
                 _load = 0.0;
             }
@@ -102,6 +90,14 @@ public class DistributionBuilder : IDistributionBuilder
         return nextEligiblePowerPlant != null;
     }
 
+    private void AppendUnusedPowerPlant(List<Distribution> distributions)
+    {
+        distributions
+            .AddRange(_availablePowerPlants
+                .OrderBy(x => x.Cost)
+                .Where(item => distributions.All(x => x.PowerPlantName != item.Name))
+                .Select(item => new Distribution(powerPlantName: item.Name, production: 0)));
+    }
 
     private double ComputeMaximumRemovableAmountBasedOnNextPowerPlant(IPowerPlant nextEligiblePowerPlant,
         IPowerPlant currentPowerPlant)

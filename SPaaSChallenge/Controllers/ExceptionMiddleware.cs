@@ -4,11 +4,12 @@ using SPaaSChallenge.Services;
 
 namespace SPaaSChallenge.Controllers;
 
-public class ExceptionMiddleware(RequestDelegate next)
+public class ExceptionMiddleware(RequestDelegate next,ILogger<ExceptionMiddleware> logger)
 {
     public (HttpStatusCode code, string message) GetResponse(Exception exception)
     {
         HttpStatusCode code;
+        logger.LogWarning(exception.Message);
         switch (exception)
         {
             case DistributionImpossibleException

@@ -5,14 +5,15 @@ using SPaaSChallenge.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services
     .AddControllers()
     .AddJsonOptions(options =>
-    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));;
+    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()));
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
 
 builder.Services.AddScoped<IProductionPlantService, ProductionPlantService>();   
 builder.Services.AddScoped<IDistributionBuilder, DistributionBuilder>();         

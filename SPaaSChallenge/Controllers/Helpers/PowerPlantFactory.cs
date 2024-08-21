@@ -1,12 +1,12 @@
 ﻿using SPaaSChallenge.Controllers.Dtos;
+using SPaaSChallenge.Models;
 using SPaaSChallenge.Services;
 
+namespace SPaaSChallenge.Controllers.Helpers;
 
-namespace SPaaSChallenge.Models;
-
-public static class PowerPlantFactory
+public class PowerPlantFactory : IPowerPlantFactory
 {
-    public static IPowerPlant Create(PowerplantDto powerPlant, FuelDto fuelDto)
+    public IPowerPlant Create(PowerplantDto powerPlant, FuelDto fuelDto)
     {
         return powerPlant.Type switch
         {

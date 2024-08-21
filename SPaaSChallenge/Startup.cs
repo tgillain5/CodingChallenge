@@ -1,6 +1,9 @@
 ﻿using SPaaSChallenge.Controllers;
 using SPaaSChallenge.Services;
 using System.Text.Json.Serialization;
+using SPaaSChallenge.Controllers.Helpers;
+using SPaaSChallenge.Models;
+
 namespace SPaaSChallenge;
 
 public class Startup
@@ -26,7 +29,9 @@ public class Startup
 
     private void AddDependencies(IServiceCollection services)
     {
-        services.AddSingleton<IProductionPlantService, ProductionPlantService>();
+        services.AddScoped<IProductionPlantService, ProductionPlantService>();
+        services.AddScoped<IDistributionBuilder, DistributionBuilder>();
+        services.AddScoped<IPowerPlantFactory, PowerPlantFactory>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

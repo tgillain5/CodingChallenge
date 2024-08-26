@@ -10,19 +10,19 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
     private double _bestCost = Double.MaxValue;
 
     
-    public DistributionBuilder SetLoad(double load)
+    public IDistributionBuilder SetLoad(double load)
     {
         _load = load;
         return this;
     }
 
-    public DistributionBuilder SetPowerPlants(IEnumerable<IPowerPlant> powerPlants)
+    public IDistributionBuilder SetPowerPlants(IEnumerable<IPowerPlant> powerPlants)
     {
         _availablePowerPlants = powerPlants;
         return this;
     }
 
-    public DistributionBuilder ValidateDistributionPossibilityExists()
+    public IDistributionBuilder ValidateDistributionPossibilityExists()
     {
         if (!_availablePowerPlants.Any(x => x.MinimumProduction < _load))
         {

@@ -4,8 +4,8 @@ namespace SPaaSChallenge.Controllers.Helpers;
 
 public interface IDistributionBuilder
 {
-    DistributionBuilder SetLoad(double load);
-    DistributionBuilder SetPowerPlants(IEnumerable<IPowerPlant> powerPlants);
-    DistributionBuilder ValidateDistributionPossibilityExists();
+    IDistributionBuilder SetLoad(double load);
+    IDistributionBuilder SetPowerPlants(IEnumerable<IPowerPlant> powerPlants);
+    IDistributionBuilder ValidateDistributionPossibilityExists();
     List<Distribution> Build();
 }

@@ -20,7 +20,6 @@ public class NodeWrapper<T>(T element)
 
             computeProduction.Invoke(node);
             
-            
             if (isFinalNode.Invoke(node)) 
                 continue;
 

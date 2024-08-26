@@ -7,7 +7,7 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
 {
     private double _load;
     private IEnumerable<IPowerPlant> _availablePowerPlants;
-    private double _bestCost = Double.MaxValue;
+    private double _bestCost = double.MaxValue;
 
     
     public IDistributionBuilder SetLoad(double load)
@@ -80,7 +80,8 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
         {
             x.Parent.Element.Production -= x.Element.MinimumProduction - remainingLoad;
             x.Element.Production = x.Element.MinimumProduction;
-                        
+            x.Element.IsValidDistribution = true;
+
             StoreBranchIfBetterCost(x,distributions);
         }
     }
@@ -91,7 +92,7 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
         {
             x.Element.Production =  remainingLoad;
             x.Element.IsValidDistribution = true;
-            
+
             StoreBranchIfBetterCost(x, distributions);
         }
         

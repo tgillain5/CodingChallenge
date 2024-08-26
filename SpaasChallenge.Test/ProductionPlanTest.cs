@@ -36,6 +36,18 @@ public class Tests
     }
     
     [Fact]
+    public async Task WhenThereIsMultipleScenario_ReturnsCheapestScenario()
+    {
+        //Act
+        var httpResponse = await GetHttpResponseForTestFile("/Requests/TakeTheCheapestScenarioRequest.json");
+        var jsonIndentedResponse = await GetJsonIndentedResponseFromHttpResponse(httpResponse);
+
+        //Assert
+        var expectedResponseAsJson = await File.ReadAllTextAsync(Directory.GetCurrentDirectory() + "/Responses/TakeTheCheapestScenarioResponse.json");
+        Assert.Equal(expectedResponseAsJson, jsonIndentedResponse);
+    }
+    
+    [Fact]
     public async Task PowerPlantAreOrderByCostEfficency()
     {
         //Act

@@ -73,6 +73,12 @@
       <None Update="Responses\IgnorePowerPlantWhenTheyWillBlockPossibleDistributionResponse.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
+      <None Update="Requests\TakeTheCheapestScenarioRequest.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Responses\TakeTheCheapestScenarioResponse.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>

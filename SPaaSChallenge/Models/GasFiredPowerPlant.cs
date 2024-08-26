@@ -12,4 +12,6 @@ public class GasFiredPowerPlant(
     public double MinimumProduction { get; } = minimumProduction;
     public double MaximumProduction { get; } = maximumProduction;
     public double Cost => gasInEuroMWh / efficiency;
+    public double Production { get; set; }
+    public bool IsValidDistribution { get; set; }
 }

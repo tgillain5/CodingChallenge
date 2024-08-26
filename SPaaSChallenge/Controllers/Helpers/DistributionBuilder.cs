@@ -7,6 +7,8 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
 {
     private double _load;
     private IEnumerable<IPowerPlant> _availablePowerPlants;
+    private double _bestCost = Double.MaxValue;
+
     
     public DistributionBuilder SetLoad(double load)
     {
@@ -41,54 +43,80 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
         List<Distribution> distributions = [];
         var powerPlants = _availablePowerPlants.OrderBy(x => x.Cost).ToList();
 
-        while (_load > 0)
-        {
-            var currentPowerPlant = powerPlants.FirstOrDefault();
-            if (currentPowerPlant == null)
-            {
-                return distributions;
-            }
-
-            powerPlants.Remove(currentPowerPlant);
-
-            if (currentPowerPlant.MinimumProduction > _load)
-            {
-                logger.LogInformation("powerPlant: {Name} doesn't meet the minimal requirement we try with the next one", currentPowerPlant.Name);
-                continue;
-            }
-            
-            logger.LogInformation("powerPlant: {Name} is not enough to cover the load requirement we'll need an extra powerPlant to meet the load requirement", currentPowerPlant.Name);
-            if (_load > currentPowerPlant.MaximumProduction)
-            {
-                var isThereMatchingPowerPlantToCompleteLoad = TryGetNextMatchingPowerPlant(out var nextEligiblePowerPlant, powerPlants, currentPowerPlant);
-                logger.LogInformation("powerPlant: {Name} will be use to complete the distribution", nextEligiblePowerPlant.Name);
-                if (!isThereMatchingPowerPlantToCompleteLoad)
-                {
-                    continue;
-                }
-
-                var removableAmount = ComputeMaximumRemovableAmountBasedOnNextPowerPlant(nextEligiblePowerPlant, currentPowerPlant);
-                distributions.Add(new Distribution(powerPlantName: currentPowerPlant.Name, production: removableAmount));
-                _load -= removableAmount;
-            }
-            else
-            {
-                logger.LogInformation("powerPlant: {Name} is enough to cover the load requirement and finish the distribution", currentPowerPlant.Name);
-                distributions.Add(new Distribution(powerPlantName: currentPowerPlant.Name, production: _load));
-                _load = 0.0;
-            }
-        }
+        
+        var root = new NodeWrapper<IPowerPlant>(null);
+        root.AddChildren(
+            powerPlants,
+            root,
+            x => { ComputeProduction(x,distributions); },
+            IsFinalInDistribution);
 
         AppendUnusedPowerPlant(distributions);
         return distributions;
     }
 
-    private bool TryGetNextMatchingPowerPlant(out IPowerPlant nextEligiblePowerPlant, List<IPowerPlant> powerPlants,
-        IPowerPlant currentPowerPlant)
+    private void ComputeProduction(NodeWrapper<IPowerPlant> x, List<Distribution> distributions)
     {
-        nextEligiblePowerPlant = powerPlants.FirstOrDefault(x => (x.MinimumProduction + currentPowerPlant.MinimumProduction) <= _load);
-        return nextEligiblePowerPlant != null;
+        if (x.Element == null)
+            return;
+                
+        x.Element.Production = x.Element.MaximumProduction;
+        var remainingLoad = _load - x.GetParentsLoad();
+                
+        //we have a correct last element and can compute the node production cost
+        AdaptLastElementProduction(remainingLoad, x, distributions);
+                
+        //we'll have to adapt more than one element    
+        AdaptProductionOnLastElements(x, remainingLoad, distributions);
     }
+
+    private void AdaptProductionOnLastElements(NodeWrapper<IPowerPlant> x, double remainingLoad, List<Distribution> distributions)
+    {
+        if (x.Parent.Element == null || remainingLoad >= x.Element.MinimumProduction) 
+            return;
+        
+        //we can remove expected load from parent
+        if (remainingLoad + (x.Parent.Element.Production - x.Parent.Element.MinimumProduction) > x.Element.MinimumProduction)
+        {
+            x.Parent.Element.Production -= x.Element.MinimumProduction - remainingLoad;
+            x.Element.Production = x.Element.MinimumProduction;
+                        
+            StoreBranchIfBetterCost(x,distributions);
+        }
+    }
+
+    private void AdaptLastElementProduction(double remainingLoad, NodeWrapper<IPowerPlant> x, List<Distribution> distributions)
+    {
+        if (remainingLoad <= x.Element.MaximumProduction && remainingLoad >= x.Element.MinimumProduction)
+        {
+            x.Element.Production =  remainingLoad;
+            x.Element.IsValidDistribution = true;
+            
+            StoreBranchIfBetterCost(x, distributions);
+        }
+        
+    }
+
+    private void StoreBranchIfBetterCost(NodeWrapper<IPowerPlant> x, List<Distribution> distributions)
+    {
+        var branchCost = x.GetTotalCost(0);
+        if (branchCost > _bestCost)
+            return;
+        
+        distributions.Clear();
+        distributions.AddRange(x.GetBranch()
+            .Select(item => new Distribution(powerPlantName: item.Name, production: item.Production))
+            .Reverse());
+        _bestCost = branchCost;
+
+    }
+
+    private static bool IsFinalInDistribution(NodeWrapper<IPowerPlant> x)
+    {
+        return x != null && x.Element.IsValidDistribution;
+    }
+
+
 
     private void AppendUnusedPowerPlant(List<Distribution> distributions)
     {
@@ -97,18 +125,5 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
                 .OrderBy(x => x.Cost)
                 .Where(item => distributions.All(x => x.PowerPlantName != item.Name))
                 .Select(item => new Distribution(powerPlantName: item.Name, production: 0)));
-    }
-
-    private double ComputeMaximumRemovableAmountBasedOnNextPowerPlant(IPowerPlant nextEligiblePowerPlant,
-        IPowerPlant currentPowerPlant)
-    {
-        var removableAmount = _load - nextEligiblePowerPlant.MinimumProduction;
-
-        if (removableAmount > currentPowerPlant.MaximumProduction)
-        {
-            removableAmount = currentPowerPlant.MaximumProduction;
-        }
-
-        return removableAmount;
     }
 }

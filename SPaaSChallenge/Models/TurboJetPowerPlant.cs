@@ -12,4 +12,6 @@ public class TurboJetPowerPlant(
     public double MinimumProduction { get; } = minimumProduction;
     public double MaximumProduction { get; } = maximumProduction;
     public double Cost => kerosineInEuroMWh / efficiency;
+    public double Production { get; set; }
+    public bool IsValidDistribution { get; set; }
 }

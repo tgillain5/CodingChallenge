@@ -9,4 +9,6 @@ public class WindTurbinePowerPlant(string name, double production, double windPe
     public double MaximumProduction => production * (windPercentage / 100);
 
     public double Cost => 0;
+    public double Production { get; set; }
+    public bool IsValidDistribution { get; set; }
 }

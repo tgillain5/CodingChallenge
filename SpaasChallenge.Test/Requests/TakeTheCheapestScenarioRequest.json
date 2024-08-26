@@ -1,0 +1,40 @@
+{
+  "load": 120,
+  "fuels":
+  {
+    "gas(euro/MWh)": 13.4,
+    "kerosine(euro/MWh)": 5000.8,
+    "co2(euro/ton)": 20,
+    "wind(%)": 100
+  },
+  "powerplants": [
+    {
+      "name": "firstGasfired1",
+      "type": "gasfired",
+      "efficiency": 0.60,
+      "pmin": 30,
+      "pmax": 200
+    },
+    {
+      "name": "firstTurbojet",
+      "type": "turbojet",
+      "efficiency": 0.1,
+      "pmin": 10,
+      "pmax": 30
+    },
+    {
+      "name": "firstWindpark",
+      "type": "windturbine",
+      "efficiency": 1,
+      "pmin": 50,
+      "pmax": 50
+    },
+    {
+      "name": "seccondWindpark",
+      "type": "windturbine",
+      "efficiency": 1,
+      "pmin": 50,
+      "pmax": 50
+    }
+  ]
+}

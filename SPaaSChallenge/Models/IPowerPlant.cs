@@ -9,4 +9,7 @@ public interface IPowerPlant
     public double MaximumProduction { get; }
 
     public double Cost { get; }
+    
+    public double Production { get; set; }
+    public bool IsValidDistribution{ get; set; }
 }

@@ -2,10 +2,27 @@
 
 namespace SPaaSChallenge.Services.Helpers;
 
-public class PowerPlantTree<T>(T element) where T : IPowerPlant
+public class PowerPlantTree<T>(T element): IPowerPlant where T : class, IPowerPlant
 {
-    public readonly T Element = element;
+    private readonly T _element = element;
 
+    public string Name => _element.Name;
+    public double MinimumProduction => _element?.MinimumProduction ?? 0;
+    public double MaximumProduction => _element?.MaximumProduction ?? 0;
+    public double Cost => _element.Cost;
+
+    public double Production
+    {
+        
+        get => _element?.Production ?? 0;
+        set => _element.Production = value;
+    }
+    public bool IsValidDistribution 
+    { 
+        get => _element.IsValidDistribution;
+        set => _element.IsValidDistribution = value; 
+    }
+    
     public static implicit operator PowerPlantTree<T>(T t) => new (t);
 
     public PowerPlantTree<T> Parent;  
@@ -30,7 +47,7 @@ public class PowerPlantTree<T>(T element) where T : IPowerPlant
             node.Parent = parent;
             computeProduction.Invoke(node);
         
-            if (node.Element.IsValidDistribution) 
+            if (node._element.IsValidDistribution) 
                 continue;
             
             remainingPowerPlants.RemoveAt(0);
@@ -44,9 +61,9 @@ public class PowerPlantTree<T>(T element) where T : IPowerPlant
         double totalLoad = 0;
 
         var currentElement = Parent;
-        while (currentElement.Element != null)
+        while (currentElement._element != null)
         {
-            totalLoad += currentElement.Element.Production;
+            totalLoad += currentElement._element.Production;
             currentElement = currentElement.Parent;
         }
 
@@ -58,9 +75,9 @@ public class PowerPlantTree<T>(T element) where T : IPowerPlant
     {
         var currentElement = this;
 
-        while (Parent != null && currentElement.Element != null)
+        while (Parent != null && currentElement._element != null)
         {
-            totalCost += currentElement.Element.Production * currentElement.Element.Cost;
+            totalCost += currentElement._element.Production * currentElement._element.Cost;
             currentElement = currentElement.Parent;
         }
         return totalCost;
@@ -70,12 +87,11 @@ public class PowerPlantTree<T>(T element) where T : IPowerPlant
     {
         list ??= [];
         
-        if (Element != null)
-            list.Add(Element);
+        if (_element != null)
+            list.Add(_element);
         
         Parent?.GetBranch(list);
         return list;
     }
-
-
+    
 }

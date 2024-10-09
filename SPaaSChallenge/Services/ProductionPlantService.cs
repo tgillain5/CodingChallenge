@@ -22,13 +22,13 @@ public class ProductionPlantService(IPowerPlantFactory powerPlantFactory, ILogge
 
         new PowerPlantTree<IPowerPlant>(null).BuildDistribution(
             _availablePowerPlants.OrderBy(x => x.Cost),
-            computeProduction : x =>
+            computeProduction : powerPlantCurrentNode =>
             {
-                x.Element.Production = x.Element.MaximumProduction;
-                var remainingLoad = _load - x.GetParentsLoad();
+                powerPlantCurrentNode.Production = powerPlantCurrentNode.MaximumProduction;
+                var remainingLoad = _load - powerPlantCurrentNode.GetParentsLoad();
                 
-                AdaptProductionOnFinalElement(x, remainingLoad);
-                AdaptProductionOnLastElements(x, remainingLoad);
+                AdaptProductionOnFinalElement(powerPlantCurrentNode, remainingLoad);
+                AdaptProductionOnLastElements(powerPlantCurrentNode, remainingLoad);
             });
 
         AppendUnusedPowerPlant();
@@ -45,41 +45,41 @@ public class ProductionPlantService(IPowerPlantFactory powerPlantFactory, ILogge
             throw new DistributionImpossibleException("Impossible to provide the expected load");
     }
     
-    private void AdaptProductionOnLastElements(PowerPlantTree<IPowerPlant> x, double remainingLoad)
+    private void AdaptProductionOnLastElements(PowerPlantTree<IPowerPlant> currentNode, double remainingLoad)
     {
-        if (x.Parent.Element == null || remainingLoad >= x.Element.MinimumProduction) 
+        if (currentNode.Parent == null || remainingLoad >= currentNode.MinimumProduction) 
             return;
         
         //we can remove expected load from parent
-        if (remainingLoad + (x.Parent.Element.Production - x.Parent.Element.MinimumProduction) > x.Element.MinimumProduction)
+        if (remainingLoad + (currentNode.Parent.Production - currentNode.Parent.MinimumProduction) > currentNode.MinimumProduction)
         {
-            x.Parent.Element.Production -= x.Element.MinimumProduction - remainingLoad;
-            x.Element.Production = x.Element.MinimumProduction;
-            x.Element.IsValidDistribution = true;
+            currentNode.Parent.Production -= currentNode.MinimumProduction - remainingLoad;
+            currentNode.Production = currentNode.MinimumProduction;
+            currentNode.IsValidDistribution = true;
 
-            StoreBranchIfBetterCost(x);
+            StoreBranchIfBetterCost(currentNode);
         }
     }
 
-    private void AdaptProductionOnFinalElement( PowerPlantTree<IPowerPlant> x, double remainingLoad)
+    private void AdaptProductionOnFinalElement(PowerPlantTree<IPowerPlant> currentNode, double remainingLoad)
     {
-        if (remainingLoad <= x.Element.MaximumProduction && remainingLoad >= x.Element.MinimumProduction)
+        if (remainingLoad <= currentNode.MaximumProduction && remainingLoad >= currentNode.MinimumProduction)
         {
-            x.Element.Production =  remainingLoad;
-            x.Element.IsValidDistribution = true;
+            currentNode.Production =  remainingLoad;
+            currentNode.IsValidDistribution = true;
 
-            StoreBranchIfBetterCost(x);
+            StoreBranchIfBetterCost(currentNode);
         }
     }
 
-    private void StoreBranchIfBetterCost(PowerPlantTree<IPowerPlant> x)
+    private void StoreBranchIfBetterCost(PowerPlantTree<IPowerPlant> currentNode)
     {
-        var branchCost = x.GetTotalCost();
+        var branchCost = currentNode.GetTotalCost();
         if (branchCost > _bestCost)
             return;
         
         _distribution.Clear();
-        _distribution.AddRange(x.GetBranch()
+        _distribution.AddRange(currentNode.GetBranch()
             .Select(item => new Distribution(powerPlantName: item.Name, production: item.Production))
             .Reverse());
         

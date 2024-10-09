@@ -16,7 +16,6 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 builder.Services.AddScoped<IProductionPlantService, ProductionPlantService>();   
-builder.Services.AddScoped<IDistributionBuilder, DistributionBuilder>();         
 builder.Services.AddScoped<IPowerPlantFactory, PowerPlantFactory>();             
 
 var app = builder.Build();

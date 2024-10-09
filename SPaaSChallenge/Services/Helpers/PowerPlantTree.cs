@@ -2,9 +2,7 @@
 
 namespace SPaaSChallenge.Services.Helpers;
 
-
-public class PowerPlantTree<T>(T element)
-    where T : IPowerPlant
+public class PowerPlantTree<T>(T element) where T : IPowerPlant
 {
     public readonly T Element = element;
 
@@ -12,26 +10,31 @@ public class PowerPlantTree<T>(T element)
 
     public PowerPlantTree<T> Parent;  
     
-    public void BuildTree(List<T> powerPlants, Action<PowerPlantTree<T>> computeProduction, Func<PowerPlantTree<T>, bool> isFinalNode) 
+    /// <summary>
+    /// we build the tree to compute best cost to do that the tree needs to know how to computeProduction.
+    /// since it's not a tree navigation logic this is out of the PowerPlantTree class
+    /// </summary>
+    /// <param name="powerPlants"></param>
+    /// <param name="computeProduction"></param>
+    public void BuildDistribution(IEnumerable<T> powerPlants, Action<PowerPlantTree<T>> computeProduction) 
     {
-        AddChildren(powerPlants, this, computeProduction, isFinalNode);
+        AddChildren(powerPlants.ToList(), this, computeProduction);
     }
     
-    private static void AddChildren(List<T> powerPlants, PowerPlantTree<T> parent, Action<PowerPlantTree<T>> computeProduction, Func<PowerPlantTree<T>, bool> isFinalNode)
+    private static void AddChildren(IList<T> powerPlants, PowerPlantTree<T> parent, Action<PowerPlantTree<T>> computeProduction)
     {
         var remainingPowerPlants = powerPlants.ToList();
         
         foreach (PowerPlantTree<T> node in powerPlants)
         {
             node.Parent = parent;
-
             computeProduction.Invoke(node);
-            
-            if (isFinalNode.Invoke(node)) 
+        
+            if (node.Element.IsValidDistribution) 
                 continue;
-
+            
             remainingPowerPlants.RemoveAt(0);
-            AddChildren(remainingPowerPlants, node, computeProduction,isFinalNode);
+            AddChildren(remainingPowerPlants, node, computeProduction);
         }
         
     }
@@ -40,7 +43,7 @@ public class PowerPlantTree<T>(T element)
     {
         double totalLoad = 0;
 
-        var currentElement =Parent;
+        var currentElement = Parent;
         while (currentElement.Element != null)
         {
             totalLoad += currentElement.Element.Production;
@@ -51,7 +54,7 @@ public class PowerPlantTree<T>(T element)
     }
     
     
-    public double GetTotalCost(double totalCost)
+    public double GetTotalCost(double totalCost = 0)
     {
         var currentElement = this;
 
@@ -63,17 +66,14 @@ public class PowerPlantTree<T>(T element)
         return totalCost;
     }
 
-    public List<T> GetBranch(List<T> list = null)
+    public IList<T> GetBranch(List<T> list = null)
     {
         list ??= [];
         
         if (Element != null)
-        {
             list.Add(Element);
-        }
-
+        
         Parent?.GetBranch(list);
-
         return list;
     }
 

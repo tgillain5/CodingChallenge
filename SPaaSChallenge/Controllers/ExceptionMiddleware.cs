@@ -12,8 +12,7 @@ public class ExceptionMiddleware(RequestDelegate next,ILogger<ExceptionMiddlewar
         
         switch (exception)
         {
-            case DistributionImpossibleException
-                or InvalidPowerPlantException:
+            case DistributionImpossibleException:
                 logger.LogWarning(exception.Message);
                 code = HttpStatusCode.BadRequest;
                 break;

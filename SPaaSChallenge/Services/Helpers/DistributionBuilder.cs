@@ -1,7 +1,6 @@
 ﻿using SPaaSChallenge.Models;
-using SPaaSChallenge.Services;
 
-namespace SPaaSChallenge.Controllers.Helpers;
+namespace SPaaSChallenge.Services.Helpers;
 
 public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistributionBuilder
 {
@@ -43,19 +42,16 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
         List<Distribution> distributions = [];
         var powerPlants = _availablePowerPlants.OrderBy(x => x.Cost).ToList();
 
-        
-        var root = new NodeWrapper<IPowerPlant>(null);
-        root.AddChildren(
+        new PowerPlantTree<IPowerPlant>(null).BuildTree(
             powerPlants,
-            root,
-            x => { ComputeProduction(x,distributions); },
+            x => { ComputeProduction(x, distributions); },
             IsFinalInDistribution);
 
         AppendUnusedPowerPlant(distributions);
         return distributions;
     }
 
-    private void ComputeProduction(NodeWrapper<IPowerPlant> x, List<Distribution> distributions)
+    private void ComputeProduction(PowerPlantTree<IPowerPlant> x, List<Distribution> distributions)
     {
         if (x.Element == null)
             return;
@@ -70,7 +66,7 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
         AdaptProductionOnLastElements(x, remainingLoad, distributions);
     }
 
-    private void AdaptProductionOnLastElements(NodeWrapper<IPowerPlant> x, double remainingLoad, List<Distribution> distributions)
+    private void AdaptProductionOnLastElements(PowerPlantTree<IPowerPlant> x, double remainingLoad, List<Distribution> distributions)
     {
         if (x.Parent.Element == null || remainingLoad >= x.Element.MinimumProduction) 
             return;
@@ -86,7 +82,7 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
         }
     }
 
-    private void AdaptLastElementProduction(double remainingLoad, NodeWrapper<IPowerPlant> x, List<Distribution> distributions)
+    private void AdaptLastElementProduction(double remainingLoad, PowerPlantTree<IPowerPlant> x, List<Distribution> distributions)
     {
         if (remainingLoad <= x.Element.MaximumProduction && remainingLoad >= x.Element.MinimumProduction)
         {
@@ -98,7 +94,7 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
         
     }
 
-    private void StoreBranchIfBetterCost(NodeWrapper<IPowerPlant> x, List<Distribution> distributions)
+    private void StoreBranchIfBetterCost(PowerPlantTree<IPowerPlant> x, List<Distribution> distributions)
     {
         var branchCost = x.GetTotalCost(0);
         if (branchCost > _bestCost)
@@ -112,12 +108,11 @@ public class DistributionBuilder(ILogger<DistributionBuilder> logger) : IDistrib
 
     }
 
-    private static bool IsFinalInDistribution(NodeWrapper<IPowerPlant> x)
+    private static bool IsFinalInDistribution(PowerPlantTree<IPowerPlant> x)
     {
         return x != null && x.Element.IsValidDistribution;
     }
-
-
+    
 
     private void AppendUnusedPowerPlant(List<Distribution> distributions)
     {

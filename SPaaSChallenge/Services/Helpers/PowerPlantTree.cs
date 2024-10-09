@@ -1,20 +1,27 @@
 ﻿using SPaaSChallenge.Models;
 
-namespace SPaaSChallenge.Controllers.Helpers;
+namespace SPaaSChallenge.Services.Helpers;
 
-public class NodeWrapper<T>(T element)
+
+public class PowerPlantTree<T>(T element)
     where T : IPowerPlant
 {
     public readonly T Element = element;
-    public static implicit operator NodeWrapper<T>(T t) => new (t);
 
-    public NodeWrapper<T> Parent;  
+    public static implicit operator PowerPlantTree<T>(T t) => new (t);
+
+    public PowerPlantTree<T> Parent;  
     
-    public void AddChildren(List<T> powerPlants,NodeWrapper<T> parent, Action<NodeWrapper<T>> computeProduction , Func<NodeWrapper<T>,bool> isFinalNode)
+    public void BuildTree(List<T> powerPlants, Action<PowerPlantTree<T>> computeProduction, Func<PowerPlantTree<T>, bool> isFinalNode) 
+    {
+        AddChildren(powerPlants, this, computeProduction, isFinalNode);
+    }
+    
+    private static void AddChildren(List<T> powerPlants, PowerPlantTree<T> parent, Action<PowerPlantTree<T>> computeProduction, Func<PowerPlantTree<T>, bool> isFinalNode)
     {
         var remainingPowerPlants = powerPlants.ToList();
         
-        foreach (NodeWrapper<T> node in powerPlants)
+        foreach (PowerPlantTree<T> node in powerPlants)
         {
             node.Parent = parent;
 
@@ -24,7 +31,7 @@ public class NodeWrapper<T>(T element)
                 continue;
 
             remainingPowerPlants.RemoveAt(0);
-            node.AddChildren(remainingPowerPlants,node, computeProduction,isFinalNode);
+            AddChildren(remainingPowerPlants, node, computeProduction,isFinalNode);
         }
         
     }

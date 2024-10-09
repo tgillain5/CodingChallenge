@@ -1,6 +1,6 @@
 ﻿using SPaaSChallenge.Models;
 
-namespace SPaaSChallenge.Controllers.Helpers;
+namespace SPaaSChallenge.Services.Helpers;
 
 public interface IDistributionBuilder
 {

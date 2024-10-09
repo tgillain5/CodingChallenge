@@ -1,7 +1,7 @@
 using System.Text.Json.Serialization;
 using SPaaSChallenge.Controllers;
-using SPaaSChallenge.Controllers.Helpers;
 using SPaaSChallenge.Services;
+using SPaaSChallenge.Services.Helpers;
 
 var builder = WebApplication.CreateBuilder(args);
 

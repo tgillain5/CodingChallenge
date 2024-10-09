@@ -1,7 +1,7 @@
 ﻿using SPaaSChallenge.Controllers.Dtos;
 using SPaaSChallenge.Models;
 
-namespace SPaaSChallenge.Controllers.Helpers;
+namespace SPaaSChallenge.Services.Helpers;
 
 public interface IPowerPlantFactory
 {

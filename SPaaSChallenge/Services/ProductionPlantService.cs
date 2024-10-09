@@ -1,6 +1,6 @@
 ﻿using SPaaSChallenge.Controllers.Dtos;
-using SPaaSChallenge.Controllers.Helpers;
 using SPaaSChallenge.Models;
+using SPaaSChallenge.Services.Helpers;
 
 namespace SPaaSChallenge.Services;
 
@@ -8,13 +8,11 @@ public class ProductionPlantService(IDistributionBuilder distributionBuilder,IPo
 {
     public List<Distribution> ComputeLoadDistribution(double load, FuelDto fuelDto, PowerplantDto[] powerPlantDtos)
     {
-        var distributions = distributionBuilder
+        return distributionBuilder
             .SetLoad(load)
             .SetPowerPlants(powerPlantDtos.Select(x => powerPlantFactory.Create(x, fuelDto)))
             .ValidateDistributionPossibilityExists()
             .Build();
-
-        return distributions;
     }
     
 }

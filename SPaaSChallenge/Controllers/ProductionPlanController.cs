@@ -7,14 +7,12 @@ using SPaaSChallenge.Services;
 namespace SPaaSChallenge.Controllers;
 
 [ApiController]
-[Route("[controller]")]
 public class ProductionPlanController(IProductionPlantService productionPlantService)
 {
     
     [HttpPost("productionplan")]
     public  ActionResult<(string name, double production)[]> ProductionPlan(ProductionPlantRequest productionPlantRequest)
     {
-
         var distributions = productionPlantService.ComputeLoadDistribution(
             load: productionPlantRequest.Load,
             fuelDto: productionPlantRequest.FuelDto,

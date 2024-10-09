@@ -126,6 +126,6 @@ public class Tests
     {
         var requestAsJson = await File.ReadAllTextAsync(Directory.GetCurrentDirectory() + file);
         var request = JsonSerializer.Deserialize<ProductionPlantRequest>(requestAsJson);
-        return await _client.PostAsJsonAsync("ProductionPlan/productionplan", request);
+        return await _client.PostAsJsonAsync("productionplan", request);
     }
 }

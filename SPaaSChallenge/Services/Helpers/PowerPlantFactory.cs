@@ -1,8 +1,8 @@
-﻿using SPaaSChallenge.Controllers.Dtos;
+﻿using System.ComponentModel;
+using SPaaSChallenge.Controllers.Dtos;
 using SPaaSChallenge.Models;
-using SPaaSChallenge.Services;
 
-namespace SPaaSChallenge.Controllers.Helpers;
+namespace SPaaSChallenge.Services.Helpers;
 
 public class PowerPlantFactory : IPowerPlantFactory
 {
@@ -29,7 +29,7 @@ public class PowerPlantFactory : IPowerPlantFactory
                 production: powerPlant.MaximumProduction,
                 windPercentage: fuelDto.Wind),
 
-            _ => throw new InvalidPowerPlantException("invalid powerPlant type")
+            _ => throw new InvalidEnumArgumentException("invalid powerPlant type")
         };
     }
 }
